@@ -20,6 +20,12 @@ const CourseSchema = new mongoose.Schema({
         // Tek tek statik olarak bu degeri biz giremeyeceğimiz için yukarıdaki 'name' değerini alacağız ve bunu slug'a çevireceğiz.
         type: String,
         unique : true
+    },
+    category : {
+        // Kurslar ile Kategoriler arasında bir ilişki olucak. Biz kursları oluştururken aynı zamanda kategorilerini de seçebileceğiz.
+        // Peki bu kategoriler nereden gelecek ? 'ref' olarak verdiğimiz yerden , yani 'Category' modelinden gelicek.
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
     }
 }, {
     // timestamps:true --> createdAt yerine genellikle 'timestamps' kullanılır !
