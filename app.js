@@ -1,26 +1,35 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const pageRoute = require('./routes/pageRoute');
+const courseRoute = require('./routes/courseRoute');
+require('dotenv').config()
 
 const app = express();
+
+const port = 3000;
+
+mongoose.connect(process.env.MONGO_URl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // useFindAndModify : false,
+    // useCreateIndex : true
+}, () => {
+    app.listen(port, () => {
+        console.log(`Server is running on ${port}`);
+    })
+})
 
 app.set("view engine", "ejs");
 
 // Middleware
 app.use(express.static('public'));
+// req.body'den gelen degerleri görmemizi sağlar , aksi taktirde undefined olur.
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 
-app.get('/', (req, res) => {
-    res.status(200).render('index',{
-        page_name : "index"  // degisken yolluyoruz ve bu sayede hangi link aktifse onu aktifleştiriyoruz
-    });
-})
+// Routes
 
-app.get('/about',(req,res) => {
-    res.status(200).render('about',{
-        page_name : "about" // degisken yolluyoruz ve bu sayede hangi link aktifse onu aktifleştiriyoruz
-    });
-})
-
-
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server running on ${port}..`);
-}) 
+app.use('/', pageRoute);
+app.use('/courses', courseRoute);
